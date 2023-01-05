@@ -1,16 +1,18 @@
-import { View, ActivityIndicator, Dimensions, Text, FlatList, ScrollView } from 'react-native';
+import { View, ActivityIndicator, Dimensions, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useMovies } from '../hooks/useMovies';
 import { MovieCard } from '../components/MovieCard';
 import Carousel from 'react-native-snap-carousel';
 import { MovieRow } from '../components/MovieRow';
+import { GradientBackground } from '../components/GradientBackground';
 
 const { width: windowWidth } = Dimensions.get('window')
 
 export const HomeScreen = () => {
 
-  const { nowPlaying, popular,topRated, upComing, isLoading } = useMovies()
+  const { nowPlaying, popular, topRated, upComing, isLoading } = useMovies()
   const { top } = useSafeAreaInsets()
+
 
   if (isLoading) {
     return (
@@ -21,24 +23,26 @@ export const HomeScreen = () => {
   }
 
   return (
-    <ScrollView>
-      <View style={{ marginTop: top + 20 }}>
-        <View style={{ height: 440 }}>
-          <Carousel
-            vertical={false}
-            data={nowPlaying!}
-            renderItem={({ item }: any) => <MovieCard movie={item} fileSize="/w342" />}
-            sliderWidth={windowWidth}
-            itemWidth={300}
-            inactiveSlideOpacity={0.9}
-          />
+    <GradientBackground>
+      <ScrollView>
+        <View style={{ marginTop: top + 20 }}>
+          <View style={{ height: 440 }}>
+            <Carousel
+              vertical={false}
+              data={nowPlaying}
+              renderItem={({ item }: any) => <MovieCard movie={item} fileSize="/w342" />}
+              sliderWidth={windowWidth}
+              itemWidth={300}
+              inactiveSlideOpacity={0.9}
+            />
+          </View>
+
+          <MovieRow movies={popular} title='Populares' />
+          <MovieRow movies={topRated} title='Top Rated' />
+          <MovieRow movies={upComing} title='Upcoming' />
+
         </View>
-
-        <MovieRow movies={ popular } title='Populares' />
-        <MovieRow movies={ topRated } title='Top Rated' />
-        <MovieRow movies={ upComing }  title='Upcoming' />
-
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </GradientBackground>
   )
 }
